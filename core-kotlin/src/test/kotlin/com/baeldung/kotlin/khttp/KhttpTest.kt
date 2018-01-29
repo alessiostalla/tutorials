@@ -19,7 +19,7 @@ class KhttpTest {
         val response = khttp.get(
                 url = "http://httpbin.org/get",
                 params = mapOf("p1" to "1", "p2" to "2"))
-        val args = response.jsonObject.getJSONObject("args")
+        val args : JSONObject = response.jsonObject.getJSONObject("args")
 
         assertEquals("1", args["p1"])
         assertEquals("2", args["p2"])
