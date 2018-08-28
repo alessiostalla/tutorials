@@ -38,6 +38,22 @@ class ExposedTest {
     }
 
     @Test
+    fun whenNoConnection_thenFailure() {
+        val database = Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+        val connection = database.connector.invoke() //Keep a connection open so the DB is not destroyed after the first transaction
+        transaction {
+            SchemaUtils.create(Cities)
+            Cities.insert {
+                it[name] = "Genova"
+            }
+        }
+        try {
+            Cities.selectAll().count()
+            fail("Exception expected")
+        } catch (e: Exception) {}
+    }
+
+    @Test
     fun whenManualCommit_thenOk() {
         Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
         transaction {
